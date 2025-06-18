@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            "p_controller = cps_pid_turtle.p_controller:main",
         ],
     },
 )
