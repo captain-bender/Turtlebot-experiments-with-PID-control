@@ -17,11 +17,14 @@ setup(
     maintainer_email='a.plastropoulos.229@cranfield.ac.uk',
     description='TODO: Package description',
     license='TODO: License declaration',
-    tests_require=['pytest'],
+    extras_require={
+        'test': ['pytest'],
+        },
     entry_points={
         'console_scripts': [
             "p_controller = cps_pid_turtle.p_controller:main",
             "sensor_sim   = cps_pid_turtle.sensor_sim:main",
+            "analyse_odom = cps_pid_turtle.analyse_odom:main"
         ],
     },
 )
