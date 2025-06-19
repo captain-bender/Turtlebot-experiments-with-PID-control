@@ -4,6 +4,7 @@ from rclpy.node   import Node
 from turtlesim.msg import Pose
 from geometry_msgs.msg import Twist
 from rcl_interfaces.msg import SetParametersResult
+from std_msgs.msg import Float32
 
 MAX_LIN  = 3.0   # turtlesim limits
 MAX_ANG  = 6.0
@@ -28,6 +29,9 @@ class PController(Node):
 
         # enable live tuning ------------------------------------------------
         self.add_on_set_parameters_callback(self._param_cb)
+
+        self.error_pub = self.create_publisher(Float32, "~/error/dist", 10)
+        self.yaw_pub   = self.create_publisher(Float32, "~/error/yaw",  10)
 
     # -------- pose callback ----------------------------------------------
     def pose_cb(self, pose: Pose):
@@ -54,6 +58,9 @@ class PController(Node):
 
         if dist < 0.05:                               # waypoint reached
             self.wp_idx = (self.wp_idx + 1) % len(self.waypoints)
+        
+        self.error_pub.publish(Float32(data=dist))
+        self.yaw_pub.publish(Float32(data=yaw_err))
 
     # -------- helpers -----------------------------------------------------
     def _make_vertices(self, pose: Pose):
@@ -80,4 +87,11 @@ class PController(Node):
 # entry point
 def main():
     rclpy.init()
-    rclpy.spin(PController())
+    node = PController()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        if rclpy.ok():
+            rclpy.shutdown()
