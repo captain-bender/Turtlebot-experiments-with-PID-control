@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             "p_controller = cps_pid_turtle.p_controller:main",
+            "sensor_sim   = cps_pid_turtle.sensor_sim:main",
         ],
     },
 )

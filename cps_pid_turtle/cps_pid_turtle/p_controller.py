@@ -3,6 +3,7 @@ import math, time, rclpy
 from rclpy.node   import Node
 from turtlesim.msg import Pose
 from geometry_msgs.msg import Twist
+from rcl_interfaces.msg import SetParametersResult
 
 MAX_LIN  = 3.0   # turtlesim limits
 MAX_ANG  = 6.0
@@ -22,8 +23,7 @@ class PController(Node):
         self.wp_idx      = 0
         self.prev_time   = time.time()
 
-        self.sub = self.create_subscription(Pose, "/turtle1/pose",
-                                            self.pose_cb, 10)
+        self.sub = self.create_subscription(Pose, "/turtle1/pose", self.pose_cb, 10)
         self.pub = self.create_publisher  (Twist, "/turtle1/cmd_vel", 10)
 
         # enable live tuning ------------------------------------------------
@@ -75,7 +75,7 @@ class PController(Node):
     # live-parameter callback
     def _param_cb(self, params):
         # Accept all changes (no validation needed here)
-        return rclpy.parameter.SetParametersResult(successful=True)
+        return SetParametersResult(successful=True)
 
 # entry point
 def main():
